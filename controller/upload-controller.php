@@ -2,22 +2,29 @@
 
 $option = null;
 
-if(isset($_POST['s'])) {
-    $option = $_POST['s'];
+$result = array(
+    $_POST,
+    $_FILES
+);
+echo json_encode($result);
+exit;
+
+if(isset($_POST['service'])) {
+    $option = $_POST['service'];
 
 } else {
     http_response_code(400);
-    echo json_encode(['descrição' => 'É necessário informar um serviço.']);
+    echo json_encode(['error' => 'É necessário informar um serviço.']);
     exit;
 }
 
 switch ($option) {
-    case '1':
+    case 'upload':
         uploadFile();
         break;
     default:
         http_response_code(400);
-        echo json_encode(['descrição' => 'Opção não existe.']);
+        echo json_encode(['error' => 'Opção não existe.']);
         exit;
         break;
 }
@@ -27,11 +34,11 @@ function uploadFile() {
         $isMoved = move_uploaded_file($_FILES['file']['tmp_name'], 'uploads/' . $_FILES['file']['tmp_name']);
         if ($isMoved) {
             http_response_code(200);
-            echo json_encode(['descrição' => 'Arquivo carregado com sucesso!']);
+            echo json_encode(['error' => 'Arquivo carregado com sucesso!']);
             return;
         } else {
             http_response_code(400);
-            echo json_encode(['descrição' => 'Arquivo não carregado!']);
+            echo json_encode(['error' => 'Arquivo não carregado!']);
             return;
         }
     
